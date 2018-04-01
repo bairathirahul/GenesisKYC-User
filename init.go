@@ -1,6 +1,16 @@
 package main
-import "fmt"
-import "github.com/hyperledger/fabric/core/chaincode/shim"
+
+import (
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"strconv"
+	"strings"
+	"time"
+
+	"github.com/hyperledger/fabric/core/chaincode/shim"
+	pb "github.com/hyperledger/fabric/protos/peer"
+)
 
 //peer address group
 //bankx
@@ -13,13 +23,13 @@ import "github.com/hyperledger/fabric/core/chaincode/shim"
 //custom data models
 type Customer struct {
 		ID						int 		`json:"id"`
-        Salutation				String		`json:"Salutation"`
-        FirstName				String		`json:"FirstName"`
-        MiddleName				String		`json:"MiddleName"`
-        LastName				String		`json:"LastName"`
-        DateofBirth				String		`json:"DateofBirth"`
-        SocialSecurityNumber	String		`json:"SocialSecurityNumber"`
-        Gender					String		`json:"Gender"`
+        Salutation				String		`json:"salutation"`
+        FirstName				String		`json:"firstName"`
+        MiddleName				String		`json:"middleName"`
+        LastName				String		`json:"lastName"`
+        DateofBirth				String		`json:"dateofBirth"`
+        SocialSecurityNumber	String		`json:"socialSecurityNumber"`
+        Gender					String		`json:"gender"`
 }
 type Address struct {
 		Customer ID
@@ -85,9 +95,9 @@ type Document struct {
 
 type KYC struct {
  kYCApplicationId int `json:"kYCApplicationId"`
- BankTransactions BankTransactions `json:"bankTransactions"`
- Document Document `json:"document"`
- 
+ //BankTransactions BankTransactions `json:"bankTransactions"`
+ //Document Document `json:"document"`
+ Customer Customer `json:"customer"`
 }
 
 
@@ -100,7 +110,11 @@ func CreateKYCApplication(stub shim.ChaincodeStubInterface, args []string) ([]by
  }
  var kycApplicationId = args[0]
  var kycApplicationInput = args[1]
- err := stub.PutState(kycApplicationId, []byte(kycApplicationInput))
+ 
+ var customer Customer
+    err = json.Unmarshal(kycApplicationInput, &customer)
+	
+	err := stub.PutState(kycApplicationId, []byte(kycApplicationInput))
  if err != nil {
  fmt.Println("Could not save kyc application to ledger", err)
  return nil, err
@@ -121,7 +135,7 @@ func GetKYCApplication(stub shim.ChaincodeStubInterface, args []string) ([]byte,
  fmt.Println("Could not fetch kyc application with id "+kYCApplicationId+" from ledger", err)
  return nil, err
  }
- re
+ 
 type SampleChaincode struct {
 }
 //called when block chain 1st executed
@@ -131,6 +145,12 @@ func (t *SampleChaincode) Init(stub shim.ChaincodeStubInterface, function string
  return nil, nil
 }
 
+
+// Init initializes chaincode
+// ===========================
+func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
+	return shim.Success(nil)
+}
 
 //all read query here
 func (t *SampleChaincode) Query(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte,
