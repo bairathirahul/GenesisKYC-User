@@ -149,39 +149,11 @@ func (t *GenesisChainCode) registerCustomer(APIstub shim.ChaincodeStubInterface,
 	address = &Address{}
 	contact = &Contact{}
 
-	err := json.Unmarshal([]byte(args[1], basicInfo)
-	err := json.Unmarshal([]byte(args[2], address)
-	err := json.Unmarshal([]byte(args[3], contact)
+	err := json.Unmarshal([]byte(args[1]), basicInfo)
+	err := json.Unmarshal([]byte(args[2]), address)
+	err := json.Unmarshal([]byte(args[3]), contact)
 
-	customer = Customer{basicInfo: basicInfo, addresses: [address], contacts: [contact]}
-	customerAsBytes, _ := json.Marshal(customer)
-	APIstub.PutState(args[0], customer)
-
-	return shim.Success(nil)
-}
-
-// =====================================
-// Register Customer
-// This method will be executed when the customer first registers in the platform
-// It will generate a Unique ID for the customer and fills Basic Information,
-// Current Address and Personal Contact Information. These fields are mandatory
-// ones on the registration form
-// =====================================
-func (t *GenesisChainCode) registerCustomer(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
-
-	if len(args) != 3 {
-		return shim.Error("Customer basic information, address and contact must be provided for registration")
-	}
-
-	basicInfo = &BasicInfo{}
-	address = &Address{}
-	contact = &Contact{}
-
-	err := json.Unmarshal([]byte(args[1], basicInfo)
-	err := json.Unmarshal([]byte(args[2], address)
-	err := json.Unmarshal([]byte(args[3], contact)
-
-	customer = Customer{basicInfo: basicInfo, addresses: [address], contacts: [contact]}
+	customer = Customer{basicInfo: basicInfo, addresses: []Address{address}, contacts: []Contact{contact}}
 	customerAsBytes, _ := json.Marshal(customer)
 	APIstub.PutState(args[0], customer)
 
@@ -200,8 +172,6 @@ func (t *GenesisChainCode) updateCustomer(APIstub shim.ChaincodeStubInterface, a
 		return shim.Error("Incorrect number of arguments. Expecting 3")
 	}
 
-	if(args[1])
-
 	carAsBytes, _ := APIstub.GetState(args[0])
 	return shim.Success(carAsBytes)
 }
@@ -214,73 +184,5 @@ func (t *GenesisChainCode) updateCustomer(APIstub shim.ChaincodeStubInterface, a
 // =====================================
 func (t *GenesisChainCode) queryCustomer(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
-	if len(args) != 3 {
-		return shim.Error("Field name and field value are required")
-	}
-
-
-
-	basicInfo = &BasicInfo{}
-	address = &Address{}
-	contact = &Contact{}
-
-	err := json.Unmarshal([]byte(args[1], basicInfo)
-	err := json.Unmarshal([]byte(args[2], address)
-	err := json.Unmarshal([]byte(args[3], contact)
-
-	customer = Customer{basicInfo: basicInfo, addresses: [address], contacts: [contact]}
-	customerAsBytes, _ := json.Marshal(customer)
-	APIstub.PutState(args[0], customer)
-
 	return shim.Success(nil)
 }
-
-
-
-
-func CreateKYCApplication(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
-        fmt.Println("Entering CreateKYCApplication")
-        if len(args) < 2 {
-        fmt.Println("Invalid number of args")
-        //NEED TO FIX ARGUMENTS
-        return nil, errors.New("Expected at least two arguments for KYC application creation")
-        }
-        var kycApplicationId = args[0]
-        var kycApplicationInput = args[1]
-        
-        var customer Customer
-           err = json.Unmarshal(kycApplicationInput, &customer)
-               
-               err := stub.PutState(kycApplicationId, []byte(kycApplicationInput))
-        if err != nil {
-        fmt.Println("Could not save kyc application to ledger", err)
-        return nil, err
-        }
-        fmt.Println("Successfully saved kyc application")
-        return nil, nil
-       }
-       
-       func GetKYCApplication(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
-        fmt.Println("Entering GetKYCApplication")
-        if len(args) < 1 {
-        fmt.Println("Invalid number of arguments")
-        return nil, errors.New("Missing KYC application ID")
-        }
-        var kYCApplicationId = args[0]
-        bytes, err := stub.GetState(kYCApplicationId)
-        if err != nil {
-        fmt.Println("Could not fetch kyc application with id "+kYCApplicationId+" from ledger", err)
-        return nil, err
-        }
-        
-       type SampleChaincode struct {
-       }
-       //called when block chain 1st executed
-       func (t *SampleChaincode) Init(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte,
-        error) {
-        
-        return nil, nil
-       }
-       
-       
-       
