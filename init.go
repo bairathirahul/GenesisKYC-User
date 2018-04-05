@@ -118,15 +118,15 @@ func (t *GenesisChainCode) Init(stub shim.ChaincodeStubInterface) pb.Response {
 // =====================================
 // Invoke Chaincode method
 // =====================================
-func (t *GenesisChainCode) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response {
+func (t *GenesisChainCode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	// Retrieve the requested Smart Contract function and arguments
-	function, args := APIstub.GetFunctionAndParameters()
+	function, args := stub.GetFunctionAndParameters()
 
 	// Route to the appropriate handler function to interact with the ledger appropriately
 	if function == "registerCustomer" {
-		return t.registerCustomer(APIstub, args)
+		return t.registerCustomer(stub, args)
 	} else if function == "queryCustomer" {
-		return t.queryCustomer(APIstub, args)
+		return t.queryCustomer(stub, args)
 	}
 
 	return shim.Error("Invalid Smart Contract function name.")
@@ -139,23 +139,23 @@ func (t *GenesisChainCode) Invoke(APIstub shim.ChaincodeStubInterface) sc.Respon
 // Current Address and Personal Contact Information. These fields are mandatory
 // ones on the registration form
 // =====================================
-func (t *GenesisChainCode) registerCustomer(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+func (t *GenesisChainCode) registerCustomer(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 
 	if len(args) != 3 {
 		return shim.Error("Customer basic information, address and contact must be provided for registration")
 	}
 
-	basicInfo = &BasicInfo{}
-	address = &Address{}
-	contact = &Contact{}
+	var basicInfo BasicInfo
+	var address Address
+	var contact Contact
 
-	err := json.Unmarshal([]byte(args[1]), basicInfo)
-	err := json.Unmarshal([]byte(args[2]), address)
-	err := json.Unmarshal([]byte(args[3]), contact)
+	json.Unmarshal([]byte(args[1]), &basicInfo)
+	json.Unmarshal([]byte(args[2]), &address)
+	json.Unmarshal([]byte(args[3]), &contact)
 
-	customer = Customer{basicInfo: basicInfo, addresses: []Address{address}, contacts: []Contact{contact}}
+	customer := Customer{basicInfo: basicInfo, addresses: []Address{address}, contacts: []Contact{contact}}
 	customerAsBytes, _ := json.Marshal(customer)
-	APIstub.PutState(args[0], customer)
+	stub.PutState(args[0], customerAsBytes)
 
 	return shim.Success(nil)
 }
@@ -166,13 +166,13 @@ func (t *GenesisChainCode) registerCustomer(APIstub shim.ChaincodeStubInterface,
 // to accomodate any type of modification, instead of making separate method for
 // each modification type
 // =====================================
-func (t *GenesisChainCode) updateCustomer(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+func (t *GenesisChainCode) updateCustomer(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 
 	if len(args) != 3 {
 		return shim.Error("Incorrect number of arguments. Expecting 3")
 	}
 
-	carAsBytes, _ := APIstub.GetState(args[0])
+	carAsBytes, _ := stub.GetState(args[0])
 	return shim.Success(carAsBytes)
 }
 
@@ -182,7 +182,7 @@ func (t *GenesisChainCode) updateCustomer(APIstub shim.ChaincodeStubInterface, a
 // the type of requested information must also be provided. It will only return
 // the type of information requested
 // =====================================
-func (t *GenesisChainCode) queryCustomer(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+func (t *GenesisChainCode) queryCustomer(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 
 	return shim.Success(nil)
 }
