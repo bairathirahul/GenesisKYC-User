@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
@@ -85,7 +86,7 @@ type BankTransaction struct {
 	amount          int
 }
 
-type KYC struct {
+type Customer struct {
 	id               string
 	basicInfo        BasicInfo
 	addresses        []Address
@@ -140,9 +141,66 @@ func (t *GenesisChainCode) Invoke(APIstub shim.ChaincodeStubInterface) sc.Respon
 // =====================================
 func (t *GenesisChainCode) registerCustomer(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
-	if len(args) != 1 {
-		return shim.Error("Incorrect number of arguments. Expecting 1")
+	if len(args) != 3 {
+		return shim.Error("Customer basic information, address and contact must be provided for registration")
 	}
+
+	basicInfo = &BasicInfo{}
+	address = &Address{}
+	contact = &Contact{}
+
+	err := json.Unmarshal([]byte(args[1], basicInfo)
+	err := json.Unmarshal([]byte(args[2], address)
+	err := json.Unmarshal([]byte(args[3], contact)
+
+	customer = Customer{basicInfo: basicInfo, addresses: [address], contacts: [contact]}
+	customerAsBytes, _ := json.Marshal(customer)
+	APIstub.PutState(args[0], customer)
+
+	return shim.Success(nil)
+}
+
+// =====================================
+// Register Customer
+// This method will be executed when the customer first registers in the platform
+// It will generate a Unique ID for the customer and fills Basic Information,
+// Current Address and Personal Contact Information. These fields are mandatory
+// ones on the registration form
+// =====================================
+func (t *GenesisChainCode) registerCustomer(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+
+	if len(args) != 3 {
+		return shim.Error("Customer basic information, address and contact must be provided for registration")
+	}
+
+	basicInfo = &BasicInfo{}
+	address = &Address{}
+	contact = &Contact{}
+
+	err := json.Unmarshal([]byte(args[1], basicInfo)
+	err := json.Unmarshal([]byte(args[2], address)
+	err := json.Unmarshal([]byte(args[3], contact)
+
+	customer = Customer{basicInfo: basicInfo, addresses: [address], contacts: [contact]}
+	customerAsBytes, _ := json.Marshal(customer)
+	APIstub.PutState(args[0], customer)
+
+	return shim.Success(nil)
+}
+
+// =====================================
+// Update Customer
+// This method will update the data of the customer. It must be made flexible
+// to accomodate any type of modification, instead of making separate method for
+// each modification type
+// =====================================
+func (t *GenesisChainCode) updateCustomer(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+
+	if len(args) != 3 {
+		return shim.Error("Incorrect number of arguments. Expecting 3")
+	}
+
+	if(args[1])
 
 	carAsBytes, _ := APIstub.GetState(args[0])
 	return shim.Success(carAsBytes)
@@ -156,29 +214,28 @@ func (t *GenesisChainCode) registerCustomer(APIstub shim.ChaincodeStubInterface,
 // =====================================
 func (t *GenesisChainCode) queryCustomer(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
-	if len(args) != 1 {
-		return shim.Error("Incorrect number of arguments. Expecting 1")
+	if len(args) != 3 {
+		return shim.Error("Field name and field value are required")
 	}
 
-	carAsBytes, _ := APIstub.GetState(args[0])
-	return shim.Success(carAsBytes)
+
+
+	basicInfo = &BasicInfo{}
+	address = &Address{}
+	contact = &Contact{}
+
+	err := json.Unmarshal([]byte(args[1], basicInfo)
+	err := json.Unmarshal([]byte(args[2], address)
+	err := json.Unmarshal([]byte(args[3], contact)
+
+	customer = Customer{basicInfo: basicInfo, addresses: [address], contacts: [contact]}
+	customerAsBytes, _ := json.Marshal(customer)
+	APIstub.PutState(args[0], customer)
+
+	return shim.Success(nil)
 }
 
-// =====================================
-// Update Customer
-// This method will update the data of the customer. It must be made flexible
-// to accomodate any type of modification, instead of making separate method for
-// each modification type
-// =====================================
-func (t *GenesisChainCode) updateCustomer(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
-	if len(args) != 1 {
-		return shim.Error("Incorrect number of arguments. Expecting 1")
-	}
-
-	carAsBytes, _ := APIstub.GetState(args[0])
-	return shim.Success(carAsBytes)
-}
 
 
 func CreateKYCApplication(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
