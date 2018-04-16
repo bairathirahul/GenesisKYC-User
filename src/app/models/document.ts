@@ -4,6 +4,7 @@ export class Document {
   id: number;
   documentType: string;
   documentID: number;
+  documentName: string;
   documentDesc: string;
   deleted = false;
   open = false;
@@ -13,17 +14,17 @@ export class Document {
     if (input != null) {
       const inputArray = [];
       for (let key in input) {
-        if(input.hasOwnProperty(key)) {
+        if (input.hasOwnProperty(key)) {
           inputArray.push(input[key]);
         }
       }
 
-      if(inputArray.length > 0) {
+      if (inputArray.length > 0) {
         for (const entry of inputArray) {
           const document = new Document();
           document.documentType = entry.DocumentType;
           document.documentID = entry.DocumentID;
-          document.documentDesc = entry.documentDesc;
+          document.documentDesc = entry.DocumentDesc;
           documents.push(document);
         }
       }

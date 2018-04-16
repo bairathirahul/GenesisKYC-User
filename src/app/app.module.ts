@@ -38,9 +38,9 @@ import {CustomerService} from './customer.service';
 import {ProfileDocumentsComponent} from './profile-documents/profile-documents.component';
 import {FilterDeletedPipe} from './filter-deleted.pipe';
 import {MediaMatcher} from '@angular/cdk/layout';
-import { InputFileComponent } from './input-file/input-file.component';
-import { RegisteredComponent } from './registered/registered.component';
-import { ProfileRequestComponent } from './profile-request/profile-request.component';
+import {RegisteredComponent} from './registered/registered.component';
+import {ProfileRequestComponent} from './profile-request/profile-request.component';
+import {ProfileCommentComponent} from './profile-comment/profile-comment.component';
 
 const appRoutes: Routes = [
   {path: 'register', component: RegisterComponent},
@@ -55,6 +55,7 @@ const appRoutes: Routes = [
     {path: 'employments', component: ProfileEmploymentComponent},
     {path: 'bank-accounts', component: ProfileBankAccountComponent},
     {path: 'documents', component: ProfileDocumentsComponent},
+    {path: 'comments', component: ProfileCommentComponent},
     {path: 'requests', component: ProfileRequestComponent},
   ]
   },
@@ -75,9 +76,9 @@ const appRoutes: Routes = [
     ProfileBankAccountComponent,
     ProfileDocumentsComponent,
     FilterDeletedPipe,
-    InputFileComponent,
     RegisteredComponent,
-    ProfileRequestComponent
+    ProfileRequestComponent,
+    ProfileCommentComponent
   ],
   imports: [
     RouterModule.forRoot(appRoutes, {enableTracing: false}),

@@ -17,7 +17,7 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     const component = this;
     const result = this.customerService.autoLogin();
-    if (result === false && (this.router.url !== '/login' || this.router.url !== '/register')) {
+    if (result === false && ['/login', '/register'].indexOf(this.router.url) === -1) {
       this.ready = true;
       this.router.navigate(['login']);
     } else if (result !== false) {

@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { InputFileComponent } from './input-file.component';
+import { ProfileCommentComponent } from './profile-comment.component';
 
-describe('InputFileComponent', () => {
-  let component: InputFileComponent;
-  let fixture: ComponentFixture<InputFileComponent>;
+describe('ProfileCommentComponent', () => {
+  let component: ProfileCommentComponent;
+  let fixture: ComponentFixture<ProfileCommentComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ InputFileComponent ]
+      declarations: [ ProfileCommentComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(InputFileComponent);
+    fixture = TestBed.createComponent(ProfileCommentComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

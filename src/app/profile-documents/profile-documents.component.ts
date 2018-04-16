@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Document} from '../models/document';
 import {CustomerService} from '../customer.service';
+import {DomSanitizer} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-profile-documents',
@@ -13,7 +14,7 @@ export class ProfileDocumentsComponent implements OnInit {
   message: string;
   requesting = false;
 
-  constructor(private customerService: CustomerService) {
+  constructor(private customerService: CustomerService, private sanitizer: DomSanitizer) {
     this.documents = customerService.documents;
   }
 
@@ -36,8 +37,21 @@ export class ProfileDocumentsComponent implements OnInit {
     return Document.documentTypes;
   }
 
-  onFileSelected($event) {
+  getDocumentUrl(document: Document) {
+    return this.sanitizer.bypassSecurityTrustResourceUrl(this.customerService.getDocumentUrl(document.documentID));
+  }
 
+  onFileSelected($event, document) {
+    if ($event.target.files.length > 0) {
+      const file = $event.target.files[0];
+      document.documentName = file.name;
+      this.customerService.upload(file)
+        .subscribe(function (response: any) {
+          if (response.status === 200) {
+            document.documentID = response.response;
+          }
+        });
+    }
   }
 
   save() {

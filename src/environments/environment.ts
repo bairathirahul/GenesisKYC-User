@@ -6,5 +6,6 @@
 export const environment = {
   production: false,
   serviceURL: 'http://localhost:9000/',
-  ocbURL: 'http://localhost:9000/execute'
+  updateURL: 'http://localhost:9000/execute',
+  queryURL: 'http://localhost:9000/execute'
 };

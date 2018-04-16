@@ -59,5 +59,4 @@ export class ProfileEmploymentComponent implements OnInit {
         }
       });
   }
-
 }

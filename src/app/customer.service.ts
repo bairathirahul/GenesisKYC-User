@@ -8,6 +8,7 @@ import {Contact} from './models/contact';
 import {Employment} from './models/employment';
 import {BankAccount} from './models/bank-account';
 import {Document} from './models/document';
+import {Comment} from './models/comment';
 import {map} from 'rxjs/operators';
 
 @Injectable()
@@ -20,15 +21,19 @@ export class CustomerService {
   employments: Array<Employment>;
   bankAccounts: Array<BankAccount>;
   documents: Array<Document>;
+  comments: Array<Comment>;
 
   httpOptions = {
-    headers: new HttpHeaders({'Content-Type': 'application/json'})
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json'
+    })
   };
 
   obcParams = {
+    url: null,
     channel: 'kycaccess',
     chaincode: 'genesiskyc',
-    chaincodeVer: 'v1.1.5',
+    chaincodeVer: 'v1.2.0',
     method: 'updateCustomer',
     args: null
   };
@@ -69,21 +74,43 @@ export class CustomerService {
     return this.http.post(environment.serviceURL + 'register', registerInfo, this.httpOptions);
   }
 
+  upload(file) {
+    const formData = new FormData();
+    formData.append('customer_id', this.customer.id.toString());
+    formData.append('file', file, file.name);
+    return this.http.post(environment.serviceURL + 'upload', formData, {});
+  }
+
   queryCustomer() {
     const service = this;
     const params = {...this.obcParams};
     params.method = 'queryCustomer';
     params.args = [this.customer.id.toString()];
-    return this.http.post(environment.ocbURL, params, this.httpOptions)
+    params.url = environment.queryURL;
+    return this.http.post(environment.serviceURL + 'proxy', params, this.httpOptions)
       .pipe(map(function (response: any) {
         if (response.returnCode === 'Success') {
-          const data = JSON.parse(response.info);
-          service.basicInfo = BasicInfo.convert(data.BasicInfo);
-          service.addresses = Address.convert(data.Addresses);
-          service.contact = Contact.convert(data.Contact);
-          service.bankAccounts = BankAccount.convert(data.BankAccounts);
-          service.employments = Employment.convert(data.Employments);
-          service.documents = Document.convert(data.Documents);
+          if (response.result != null) {
+            const data = JSON.parse(response.result);
+            service.basicInfo = BasicInfo.convert(data.BasicInfo);
+            service.addresses = Address.convert(data.Addresses);
+            service.contact = Contact.convert(data.Contact);
+            service.bankAccounts = BankAccount.convert(data.BankAccounts);
+            service.employments = Employment.convert(data.Employments);
+            service.documents = Document.convert(data.Documents);
+            service.comments = Comment.convert(data.Comments);
+          } else {
+            service.basicInfo = new BasicInfo();
+            service.basicInfo.firstName = service.customer.firstName;
+            service.basicInfo.middleName = service.customer.middleName;
+            service.basicInfo.lastName = service.customer.lastName;
+            service.addresses = Array<Address>();
+            service.contact = new Contact();
+            service.bankAccounts = Array<BankAccount>();
+            service.employments = Array<Employment>();
+            service.documents = Array<Document>();
+            service.comments = Array<Comment>();
+          }
         }
         return response;
       }));
@@ -91,15 +118,16 @@ export class CustomerService {
 
   updateCustomer(fieldName, data) {
     const serializedData = JSON.stringify(data, function (key, value) {
-      if (key === 'dateOfBirth' || key === 'startDate' || key === 'endDate') {
+      if (key === 'dateOfBirth' || key === 'startDate' || key === 'endDate' || key === 'created') {
         return new Date(value).getTime();
       }
       return value;
     });
     const params = {...this.obcParams};
     params.args = [fieldName, this.customer.id.toString(), serializedData];
+    params.url = environment.updateURL;
 
-    return this.http.post(environment.ocbURL, params, this.httpOptions);
+    return this.http.post(environment.serviceURL + 'proxy', params, this.httpOptions);
   }
 
   logout() {
@@ -114,5 +142,9 @@ export class CustomerService {
 
   getCustomer() {
     return this.customer;
+  }
+
+  getDocumentUrl(documentID) {
+    return environment.serviceURL + 'read?id=' + documentID + '&customer_id=' + this.customer.id;
   }
 }
