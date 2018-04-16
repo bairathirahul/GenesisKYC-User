@@ -104,8 +104,12 @@ export class CustomerService {
             service.basicInfo.firstName = service.customer.firstName;
             service.basicInfo.middleName = service.customer.middleName;
             service.basicInfo.lastName = service.customer.lastName;
+
             service.addresses = Array<Address>();
+
             service.contact = new Contact();
+            service.contact.emailAddress = service.customer.email;
+
             service.bankAccounts = Array<BankAccount>();
             service.employments = Array<Employment>();
             service.documents = Array<Document>();
@@ -126,6 +130,7 @@ export class CustomerService {
     const params = {...this.obcParams};
     params.args = [fieldName, this.customer.id.toString(), serializedData];
     params.url = environment.updateURL;
+    console.log(params);
 
     return this.http.post(environment.serviceURL + 'proxy', params, this.httpOptions);
   }
