@@ -1,17 +1,6 @@
 import {Component, OnDestroy, OnInit, ChangeDetectorRef} from '@angular/core';
-import {BasicInfo} from '../models/basicInfo';
-import {Address} from '../models/address';
-import {Contact} from '../models/contact';
-import {Document} from '../models/document';
 import {ActivatedRoute, Router} from '@angular/router';
-import {ProfileBasicComponent} from '../profile-basic/profile-basic.component';
-import {ProfileAddressComponent} from '../profile-address/profile-address.component';
-import {BankAccount} from '../models/bank-account';
-import {Employment} from '../models/employment';
-import {ProfileContactComponent} from '../profile-contact/profile-contact.component';
-import {ProfileEmploymentComponent} from '../profile-employment/profile-employment.component';
 import {MediaMatcher} from '@angular/cdk/layout';
-import {ProfileBankAccountComponent} from '../profile-bank-account/profile-bank-account.component';
 import {CustomerService} from '../customer.service';
 
 @Component({
