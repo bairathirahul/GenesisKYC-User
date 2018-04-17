@@ -22,6 +22,7 @@ export class CustomerService {
   bankAccounts: Array<BankAccount>;
   documents: Array<Document>;
   comments: Array<Comment>;
+  accesses: {};
 
   httpOptions = {
     headers: new HttpHeaders({
@@ -99,36 +100,37 @@ export class CustomerService {
             service.employments = Employment.convert(data.Employments);
             service.documents = Document.convert(data.Documents);
             service.comments = Comment.convert(data.Comments);
+            service.accesses = data.Accesses;
           } else {
             service.basicInfo = new BasicInfo();
             service.basicInfo.firstName = service.customer.firstName;
             service.basicInfo.middleName = service.customer.middleName;
             service.basicInfo.lastName = service.customer.lastName;
-
             service.addresses = Array<Address>();
-
             service.contact = new Contact();
             service.contact.emailAddress = service.customer.email;
-
             service.bankAccounts = Array<BankAccount>();
             service.employments = Array<Employment>();
             service.documents = Array<Document>();
             service.comments = Array<Comment>();
+            service.accesses = {};
           }
         }
         return response;
       }));
   }
 
-  updateCustomer(fieldName, data) {
-    const serializedData = JSON.stringify(data, function (key, value) {
-      if (key === 'dateOfBirth' || key === 'startDate' || key === 'endDate' || key === 'created') {
-        return new Date(value).getTime();
-      }
-      return value;
-    });
+  updateCustomer(fieldName, data, json = true) {
+    if(json) {
+      data = JSON.stringify(data, function (key, value) {
+        if (key === 'dateOfBirth' || key === 'startDate' || key === 'endDate' || key === 'created') {
+          return new Date(value).getTime();
+        }
+        return value;
+      });
+    }
     const params = {...this.obcParams};
-    params.args = [fieldName, this.customer.id.toString(), serializedData];
+    params.args = [fieldName, this.customer.id.toString(), data];
     params.url = environment.updateURL;
     console.log(params);
 

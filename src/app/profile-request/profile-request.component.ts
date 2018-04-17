@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {CustomerService} from '../customer.service';
 
 @Component({
   selector: 'app-profile-request',
@@ -6,8 +7,23 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./profile-request.component.css']
 })
 export class ProfileRequestComponent implements OnInit {
+  accesses: {};
+  personas: Array<string>;
 
-  constructor() { }
+  constructor(private customerService: CustomerService) {
+    this.accesses = customerService.accesses;
+    this.personas = Object.keys(this.accesses);
+  }
+
+  onApproveClick(persona) {
+    const component = this;
+    this.customerService.updateCustomer('GrantAccess', persona, false)
+      .subscribe(function (response: any) {
+        if (response.returnCode === 'Success') {
+          component.accesses[persona] = true;
+        }
+      });
+  }
 
   ngOnInit() {
   }

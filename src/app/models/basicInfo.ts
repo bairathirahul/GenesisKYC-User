@@ -18,6 +18,7 @@ export class BasicInfo {
     if (input != null) {
       basicInfo.salutation = input.Salutation;
       basicInfo.firstName = input.FirstName;
+      basicInfo.middleName = input.MiddleName;
       basicInfo.lastName = input.LastName;
       basicInfo.suffix = input.Suffix;
       basicInfo.dateOfBirth = input.DateOfBirth > 0 ? new Date(input.DateOfBirth) : null;
