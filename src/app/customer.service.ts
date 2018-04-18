@@ -35,7 +35,7 @@ export class CustomerService {
     url: null,
     channel: 'kycaccess',
     chaincode: 'genesiskyc',
-    chaincodeVer: 'v1.2.0',
+    chaincodeVer: 'v1.2.8',
     method: 'updateCustomer',
     args: null
   };
