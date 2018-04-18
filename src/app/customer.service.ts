@@ -148,6 +148,15 @@ export class CustomerService {
       }));
   }
 
+  searchCustomers(query) {
+    const service = this;
+    const params = {...this.obcParams};
+    params.method = 'searchCustomer';
+    params.args = [query];
+    params.url = environment.queryURL;
+    return this.http.post(environment.serviceURL + 'proxy', params, this.httpOptions);
+  }
+
   approveRequest(persona) {
     const params = {...this.obcParams};
     params.method = 'approveCustomerAccess';

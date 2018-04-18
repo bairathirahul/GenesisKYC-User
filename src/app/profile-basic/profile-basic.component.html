@@ -67,8 +67,8 @@
 
       <mat-grid-tile [colspan]="6">
         <mat-form-field>
-          <input matInput id="profile-basic-ssn" type="text" placeholder="SSN"
-                 [(ngModel)]="basicInfo.ssn" [disabled]="requesting"/>
+          <input matInput id="profile-basic-ssn" type="text" placeholder="SSN / ITIN"
+                 [(ngModel)]="basicInfo.ssn" [disabled]="requesting" required="required" />
         </mat-form-field>
       </mat-grid-tile>
 
@@ -78,6 +78,19 @@
                  [(ngModel)]="basicInfo.passport" [disabled]="requesting"/>
         </mat-form-field>
       </mat-grid-tile>
+
+      <mat-grid-tile [colspan]="6">
+        <mat-form-field>
+          <mat-select id="profile-basic-type" placeholder="Customer Type" [(ngModel)]="basicInfo.type"
+                      required="required" [disabled]="requesting">
+            <mat-option *ngFor="let type of getTypes()" [value]="type">{{ type
+              }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </mat-grid-tile>
+
+
     </mat-grid-list>
     <mat-card-actions>
       <div class="card-submit-button">

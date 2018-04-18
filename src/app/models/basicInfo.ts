@@ -1,7 +1,7 @@
 export class BasicInfo {
   static salutations = ['Mr.', 'Ms.', 'Mrs.'];
   static genders = ['Male', 'Female', 'Unidentified'];
-  static requiredFields = ['salutation', 'firstName', 'lastName', 'dateOfBirth', 'gender', 'ssn'];
+  static types = ['Person', 'Capital'];
 
   salutation: string;
   firstName: string;
@@ -12,6 +12,7 @@ export class BasicInfo {
   gender: string;
   ssn: string;
   passport: string;
+  type: string;
 
   static convert(input: any) {
     const basicInfo = new BasicInfo();
@@ -25,6 +26,7 @@ export class BasicInfo {
       basicInfo.gender = input.Gender;
       basicInfo.ssn = input.SSN;
       basicInfo.passport = input.Passport;
+      basicInfo.type = input.Type;
     }
     return basicInfo;
   }
