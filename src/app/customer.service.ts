@@ -92,7 +92,7 @@ export class CustomerService {
     return this.http.post(environment.serviceURL + 'proxy', params, this.httpOptions)
       .pipe(map(function (response: any) {
         if (response.returnCode === 'Success') {
-          if (response.result != null) {
+          if (response.result != null && response.result !== '') {
             const data = JSON.parse(response.result);
             service.basicInfo = BasicInfo.convert(data.BasicInfo);
             service.addresses = Address.convert(data.Addresses);
@@ -142,7 +142,7 @@ export class CustomerService {
     return this.http.post(environment.serviceURL + 'proxy', params, this.httpOptions)
       .pipe(map(function (response: any) {
         if (response.returnCode === 'Success') {
-          service.status = 'updated';
+          service.queryCustomer().subscribe();
         }
         return response;
       }));
