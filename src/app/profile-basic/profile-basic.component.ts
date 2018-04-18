@@ -12,7 +12,7 @@ export class ProfileBasicComponent implements OnInit {
   message: string;
   requesting = false;
 
-  constructor(private customerService: CustomerService) {
+  constructor(public customerService: CustomerService) {
     this.basicInfo = customerService.basicInfo;
   }
 

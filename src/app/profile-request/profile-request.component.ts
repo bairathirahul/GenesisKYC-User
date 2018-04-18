@@ -17,7 +17,7 @@ export class ProfileRequestComponent implements OnInit {
 
   onApproveClick(persona) {
     const component = this;
-    this.customerService.updateCustomer('GrantAccess', persona, false)
+    this.customerService.approveRequest(persona)
       .subscribe(function (response: any) {
         if (response.returnCode === 'Success') {
           component.accesses[persona] = true;

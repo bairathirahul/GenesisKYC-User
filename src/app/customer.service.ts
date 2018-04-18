@@ -23,6 +23,7 @@ export class CustomerService {
   documents: Array<Document>;
   comments: Array<Comment>;
   accesses: {};
+  status: string;
 
   httpOptions = {
     headers: new HttpHeaders({
@@ -101,6 +102,7 @@ export class CustomerService {
             service.documents = Document.convert(data.Documents);
             service.comments = Comment.convert(data.Comments);
             service.accesses = data.Accesses;
+            service.status = data.Status;
           } else {
             service.basicInfo = new BasicInfo();
             service.basicInfo.firstName = service.customer.firstName;
@@ -113,6 +115,7 @@ export class CustomerService {
             service.employments = Array<Employment>();
             service.documents = Array<Document>();
             service.comments = Array<Comment>();
+            service.status = 'New';
             service.accesses = {};
           }
         }
@@ -121,7 +124,7 @@ export class CustomerService {
   }
 
   updateCustomer(fieldName, data, json = true) {
-    if(json) {
+    if (json) {
       data = JSON.stringify(data, function (key, value) {
         if (key === 'dateOfBirth' || key === 'startDate' || key === 'endDate' || key === 'created') {
           return new Date(value).getTime();
@@ -129,8 +132,26 @@ export class CustomerService {
         return value;
       });
     }
+
+    const service = this;
     const params = {...this.obcParams};
     params.args = [fieldName, this.customer.id.toString(), data];
+    params.url = environment.updateURL;
+    console.log(params);
+
+    return this.http.post(environment.serviceURL + 'proxy', params, this.httpOptions)
+      .pipe(map(function (response: any) {
+        if (response.returnCode === 'Success') {
+          service.status = 'updated';
+        }
+        return response;
+      }));
+  }
+
+  approveRequest(persona) {
+    const params = {...this.obcParams};
+    params.method = 'approveCustomerAccess';
+    params.args = [this.customer.id.toString(), persona];
     params.url = environment.updateURL;
     console.log(params);
 
