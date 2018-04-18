@@ -12,7 +12,11 @@ export class ProfileRequestComponent implements OnInit {
 
   constructor(private customerService: CustomerService) {
     this.accesses = customerService.accesses;
-    this.personas = Object.keys(this.accesses);
+    if (this.accesses) {
+      this.personas = Object.keys(this.accesses);
+    } else {
+      this.personas = [];
+    }
   }
 
   onApproveClick(persona) {
